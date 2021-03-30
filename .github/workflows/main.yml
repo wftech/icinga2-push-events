@@ -26,13 +26,20 @@ jobs:
           pip install pipenv
           pipenv --python python
           pipenv lock --requirements > build-requirements.txt
-      
+          
+      - name: Login to Registry
+        uses: docker/login-action@v1
+        with:
+          # registry: docker.pkg.github.com
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_REGISTRY_TOKEN }}
+          
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v2
-        with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
+        with:        
           file: build/Containerfile
-          repository: wftech/icinga2-push-events/icinga2-push-events
-          tag_with_ref: true
+          push: true
+          tags:
+             ghcr.io/${{ github.repository }}:${{ github.ref }}
+             ghcr.io/${{ github.repository }}:latest
