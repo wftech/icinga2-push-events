@@ -42,5 +42,5 @@ jobs:
           file: build/Containerfile
           push: true
           tags: |
-             ghcr.io/${{ github.repository }}:${{ github.ref }}
+             ghcr.io/${{ github.repository }}:build
              ghcr.io/${{ github.repository }}:latest
