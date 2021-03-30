@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+icinga2api = {editable = true,git = "https://github.com/wftech/python-icinga2api.git",ref = "f47b8e"}
+#flask = "*"
+#humanize = "*"
+#flask-humanize = "*"
+redis = "*"
+faker = "*"
+
+[requires]
+python_version = "3.7"

@@ -1,0 +1,12 @@
+
+FROM docker.io/library/alpine:3.13
+
+RUN apk add python3 py3-pip git
+
+RUN mkdir /opt/icinga2-push/
+ADD build-requirements.txt /opt/icinga2-push/requirements.txt
+RUN pip3 install -r /opt/icinga2-push/requirements.txt
+ADD ./main.py /opt/icinga2-push/icinga2-push
+
+WORKDIR /opt/icinga2-push
+ENTRYPOINT /opt/icinga2-push/icinga2-push

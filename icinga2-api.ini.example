@@ -1,0 +1,15 @@
+[api]
+url = https://XXXXXXXX:5665/
+username = XXXXXXX
+password = XXXXXXXXX
+ca_certificate = icinga2-ca.crt
+
+;certificate = /etc/ssl/certs/myhostname.crt
+;key = /etc/ssl/private/myhostname.key
+
+
+;url = https://icinga2:5665
+;certificate = /etc/ssl/certs/myhostname.crt
+;key = /etc/ssl/private/myhostname.key
+;ca_certificate = /etc/ssl/certs/ca.crt
+
