@@ -10,6 +10,8 @@ COUNTER = $(shell bash get-version.sh )
 
 image-app: build-requirements.txt
 	docker build -t $(APP_NAME):build -f Containerfile $(SRC_DIR)
+	docker tag $(APP_NAME):build ghcr.io/wftech/icinga2-push-events/icinga2-push-events:build
+	docker push ghcr.io/wftech/icinga2-push-events/icinga2-push-events:build
 
 build-requirements.txt: $(SRC_DIR)/Pipfile
 	cd $(SRC_DIR) && pipenv lock --requirements > build-requirements.txt

@@ -1,0 +1,12 @@
+-i https://pypi.org/simple
+-e git+https://github.com/wftech/python-icinga2api.git@f47b8e5903f5035353082f07f8d5077fecdbd5c9#egg=icinga2api
+certifi==2020.12.5
+chardet==4.0.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+faker==6.6.3
+idna==2.10; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+python-dateutil==2.8.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+redis==3.5.3
+requests==2.25.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+six==1.15.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+text-unidecode==1.3
+urllib3==1.26.4; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'

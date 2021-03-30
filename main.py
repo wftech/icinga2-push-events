@@ -2,19 +2,24 @@
 import json
 import os
 import time
+import sys
 
 from icinga2api.client import Client as Icinga2Client
 from icinga2api.exceptions import Icinga2ApiException
 import redis
 
 import warnings
+
 from urllib3.exceptions import InsecureRequestWarning
 warnings.simplefilter('ignore', category=InsecureRequestWarning)
 
-ICINGA_API_CONFIG=os.getenv('ICINGA2_CONFIG', 'icinga2-api.ini')
+ICINGA_API_CONFIG = os.getenv('ICINGA2_CONFIG', 'icinga2-api.ini')
 ONE_SHOT_SYNC = int(os.getenv('ONE_SHOT_SYNC', 0))
 REDIS_KEY = os.getenv('REDIS_KEY', 'riemann')
-WORKER_THREADS_COUNT = int(os.getenv('THREAD_COUNT', 8))
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.getenv('REDIS_PORT', '6379'))
+REDIS_DB = int(os.getenv('REDIS_DB', '0'))
+WORKER_THREADS_COUNT = int(os.getenv('THREAD_COUNT', 4))
 MESSAGE_COUNTER = 0
 
 icinga2api = Icinga2Client(config_file=ICINGA_API_CONFIG)
@@ -26,7 +31,7 @@ def process_messages():
     :return:
     """
     while True:
-        status = process_msg():
+        status = process_one_msg()
         if ONE_SHOT_SYNC and not status:
             break
 
@@ -36,7 +41,7 @@ def process_one_msg():
     Pop one message from redis and push it to Icinga
 
     :return:    True if some message was processed
-                None otherways
+                None other case
     """
     global COUNTER
 
@@ -125,17 +130,20 @@ def process_one_msg():
 
 if __name__ == '__main__':
     import threading
-    redis_client = redis.Redis(host='localhost', port=6379, db=0)
+
+    redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
+    redis_client.ping()
 
     for n in range(WORKER_THREADS_COUNT):
-        worker = threading.Thread(target=do_the_work, args=[], daemon=True, name=n)
+        worker = threading.Thread(target=process_messages, args=[],
+                                  daemon=True, name=f'worker-{n}')
         worker.start()
     time_start = time.time()
     while True:
         messages_left = redis_client.llen(REDIS_KEY)
         rate = int(MESSAGE_COUNTER / (time.time() - time_start))
         status_msg = f'events processed:{MESSAGE_COUNTER:<8}  left:{messages_left:<8}  rate:{rate:<8d} ev/s'
-        if os.isatty(sys.stdout):
+        if os.isatty(sys.stdout.fileno()):
             print(status_msg, end='\r')
             time.sleep(1)
         else:
@@ -144,17 +152,4 @@ if __name__ == '__main__':
         if ONE_SHOT_SYNC and not messages_left:
             break
 
-    print("OK")
-
-
-
-
-
-
-
-
-
-
-
-
-
+    print("Finished")
