@@ -16,6 +16,14 @@ jobs:
 
     steps:    
       - uses: actions/checkout@v2
+      
+      - name: Login to Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ repository.owner }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
         with:
@@ -27,11 +35,6 @@ jobs:
           pipenv --python python
           pipenv lock --requirements > build-requirements.txt
           
-      - name: Login to Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v2
