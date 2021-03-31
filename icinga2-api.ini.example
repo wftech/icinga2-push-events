@@ -1,8 +1,8 @@
 [api]
-url = https://XXXXXXXX:5665/
-username = XXXXXXX
-password = XXXXXXXXX
-ca_certificate = icinga2-ca.crt
+url = https://192.168.33.10:5665/
+username = root
+password = icinga 
+;ca_certificate = icinga2-ca.crt
 
 ;certificate = /etc/ssl/certs/myhostname.crt
 ;key = /etc/ssl/private/myhostname.key

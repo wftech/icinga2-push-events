@@ -43,14 +43,13 @@ def process_one_msg():
     :return:    True if some message was processed
                 None other case
     """
-    global COUNTER
+    global MESSAGE_COUNTER
 
     redis_client = redis.Redis(host='localhost', port=6379, db=0)
     item = redis_client.blpop(REDIS_KEY, timeout=5)
     if item:
         _, obj = item
     else:
-        print("No data found, exiting")
         return None
     event = json.loads(str(obj, encoding='utf-8'))
 
@@ -71,7 +70,7 @@ def process_one_msg():
     except Icinga2ApiException:
         res = None
     if res:
-        COUNTER += 1
+        MESSAGE_COUNTER += 1
         return True
 
     # create host
@@ -123,7 +122,7 @@ def process_one_msg():
         check_command='push',
         check_source='push',
     )
-    COUNTER += 1
+    MESSAGE_COUNTER += 1
     # message was processed
     return True
 
@@ -149,7 +148,11 @@ if __name__ == '__main__':
         else:
             print(status_msg)
             time.sleep(15)
+        sys.stdout.flush()
         if ONE_SHOT_SYNC and not messages_left:
             break
-
+        #
+        if threading.active_count() < WORKER_THREADS_COUNT:
+            print("Some threads died. Giving up.")
+            raise SystemExit(2)
     print("Finished")

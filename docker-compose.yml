@@ -1,0 +1,19 @@
+
+version: '2'
+
+services:
+  redis:
+    image: docker.io/library/redis:6
+    ports:
+      - "6379:6379"
+  icinga2-push:
+    image: ghcr.io/wftech/icinga2-push-events/icinga2-push-events:build
+    environment:
+        REDIS_KEY: 'riemann'
+        REDIS_HOST: 'redis'
+        REDIS_PORT: '6379'
+        WORKER_THREADS_COUNT: '4'
+        ICINGA2_CONFIG: /config/icinga2-api.ini
+    volumes:
+       - ./icinga2-api.ini.example:/config/icinga2-api.ini:ro
+
