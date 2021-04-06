@@ -45,7 +45,7 @@ def process_one_msg():
     """
     global MESSAGE_COUNTER
 
-    redis_client = redis.Redis(host='localhost', port=6379, db=0)
+    redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
     item = redis_client.blpop(REDIS_KEY, timeout=5)
     if item:
         _, obj = item
