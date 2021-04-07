@@ -8,6 +8,7 @@ services:
       - "6379:6379"
   icinga2-push:
     image: ghcr.io/wftech/icinga2-push-events/icinga2-push-events:build
+    restart: unless-stopped
     environment:
         REDIS_KEY: 'riemann'
         REDIS_HOST: 'redis'
@@ -15,5 +16,16 @@ services:
         WORKER_THREADS_COUNT: '4'
         ICINGA2_CONFIG: /config/icinga2-api.ini
     volumes:
-       - ./icinga2-api.ini.example:/config/icinga2-api.ini:ro
+       - ./icinga2-api.ini.example:/config/icinga2-api.ini:ro,Z
 
+  make-testdata:
+    image: ghcr.io/wftech/icinga2-push-events/icinga2-push-events:testdata
+    restart: unless-stopped
+    environment:
+        REDIS_KEY: 'riemann'
+        REDIS_HOST: 'redis'
+        REDIS_PORT: '6379'
+        FAKE_HOST_COUNT: '10'
+        FAKE_SERVICES_COUNT: '10'
+        FAKE_STATUSES_COUNT: '1000'
+        INTER_PUSH_DELAY: '0.1'

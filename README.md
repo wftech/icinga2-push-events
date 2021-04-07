@@ -4,6 +4,8 @@
 This is proof of concept daemon reading monitoring events
 from Redis and pushing them to Icinga with API.
 
+It is not production ready (at the moment).
+
 ## How to start
 
 
@@ -26,5 +28,12 @@ from Redis and pushing them to Icinga with API.
 * start the container
 
 
-   
+
+## how to test
+
+There is testing image
+`ghcr.io/wftech/icinga2-push-events/icinga2-push-events:testdata` which 
+generates test events and pushes them into Redis
+
+Feel  free to use `docker-compose` for testing.
 
